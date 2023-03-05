@@ -2,10 +2,41 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Product {
+  """id of the user"""
+  id: Int
+
+  """title of product"""
+  title: String!
+
+  """description of product"""
+  description: String!
+
+  """userId of creator of product"""
+  userId: Int!
+
+  """price of product"""
+  price: Int!
+  images: JSON
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
 type User {
-  id: Int!
-  username: String!
-  password: String!
+  """id of the user"""
+  userId: Int
+
+  """email of the user"""
+  email: String
+
+  """role of the user"""
+  password: String
+
+  """tokens of the user"""
+  access_token: String
 }
 
 type LoginResponse {
@@ -14,15 +45,76 @@ type LoginResponse {
 }
 
 type Query {
+  products: [Product!]!
+  product(id: Int!): Product!
   users: [User!]!
   user(username: String!): User!
 }
 
 type Mutation {
-  login(loginUserInput: LoginUserInput!): LoginResponse!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product!
+  loginUser(loginUserInput: LoginUserInput!): LoginResponse!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+input CreateProductInput {
+  """title of product"""
+  title: String!
+
+  """description of product"""
+  description: String!
+
+  """price of product"""
+  price: Float!
+
+  """suerid of product"""
+  userId: Int!
+
+  """suerid of product"""
+  images: JSON!
+}
+
+input UpdateProductInput {
+  """title of product"""
+  title: String!
+
+  """description of product"""
+  description: String!
+
+  """price of product"""
+  price: Int!
+
+  """suerid of product"""
+  userId: Int = null
+
+  """suerid of product"""
+  images: JSON!
 }
 
 input LoginUserInput {
-  username: String!
+  """email of the user"""
+  email: String!
+
+  """password of the user"""
   password: String!
+}
+
+input CreateUserInput {
+  """password of the user"""
+  password: String!
+
+  """email of the user"""
+  email: String!
+}
+
+input UpdateUserInput {
+  """password of the user"""
+  password: String
+
+  """email of the user"""
+  email: String
+  userId: Int!
 }

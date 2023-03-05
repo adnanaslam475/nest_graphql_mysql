@@ -10,12 +10,15 @@ services:
             dockerfile: ./Dockerfile
         command: npm run start:debug
         ports:
-            - 8083:3306
+            - 6603:6603
+            - 9229:9229
         networks:
             - nesjs-network
         volumes:
             - .:/usr/src/app
             - /usr/src/app/node_modules
+            - ./init.sql:/data/application/init.sql
+         
         environment:
             - MYSQL_ROOT_PASSWORD=password
             - MYSQL_PASSWORD=password

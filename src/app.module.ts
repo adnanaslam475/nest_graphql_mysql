@@ -4,16 +4,18 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
 
 import { ProductsModule } from './products/products.module';
+import { join } from 'path';
 // import { UsersModule } from './users/users.module';
-// import { TypeOrmModuleOptions } from './typeormtype.module';
+import { TypeOrmModuleOptions } from './typeormtype.module';
+import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
-import { JwtService } from '@nestjs/jwt';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -22,10 +24,14 @@ import { JwtService } from '@nestjs/jwt';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       debug: true,
       playground: true,
-      context: ({ req }) => ({ req }),
+      context: ({ req }) => {
+        return { req };
+      },
     }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
+      // host: 'host.docker.internal',
       host: 'localhost',
       port: 3306,
       username: 'root',
@@ -34,16 +40,17 @@ import { JwtService } from '@nestjs/jwt';
       password: 'password',
       database: 'new_schema',
       autoLoadEntities: true,
-      // entities: [Book],
-      synchronize: true,
-      dropSchema: true,
+      synchronize: true, // foor tables generation
+      // dropSchema: true,
+      // entities: ['src/**/*.entity.ts']
+
     }),
     ProductsModule,
     AuthModule,
     UsersModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, JwtService],
-  // exports: [],
 })
 export class AppModule {}
