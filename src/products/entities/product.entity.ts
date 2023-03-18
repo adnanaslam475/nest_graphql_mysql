@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IsEmpty } from 'class-validator';
 import graphqlTypeJson from 'graphql-type-json';
 
@@ -35,4 +35,8 @@ export class Product {
   @Column('json', { nullable: false })
   @Field(() => graphqlTypeJson, { nullable: true })
   images: object;
+
+  @CreateDateColumn()
+  @Field(() => Date, { description: 'date of product' })
+  createdAt: Date;
 }

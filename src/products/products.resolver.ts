@@ -4,14 +4,18 @@ import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { JwtAuthGuard } from 'src/auth/jwt-auth-guard';
-import { Request, UseGuards } from '@nestjs/common';
+import { Body, ParseIntPipe, ParseArrayPipe, ParseBoolPipe, ParseEnumPipe, ParseFilePipe, Request, UseGuards, ValidationPipe, UseInterceptors } from '@nestjs/common';
 import { CurrentUser } from 'src/users/user.decorator.graphql';
 import { User } from 'src/users/entities/user.entity';
+import { LoggingInterceptor } from 'src/users/users.interceptors';
+// import { FetchProductsArgs } from './dto/fetch-products-input';
 
 @Resolver(() => Product)
-export class ProductsResolver {
-  constructor(private readonly productsService: ProductsService) {}
+// @UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 
+export class ProductsResolver {
+  constructor(private readonly productsService: ProductsService) { }
   @Query(() => [Product], { name: 'products' })
   findAll() {
     return this.productsService.findAll();
@@ -34,6 +38,26 @@ export class ProductsResolver {
     });
   }
 
+  @Query(() => [Product], { name: 'getProducts' })
+  async findAllPage(
+    @Args('page', ParseIntPipe) page: number,
+    @Args('limit', { type: () => Int }) limit: number,
+    @Args('column', { type: () => String, defaultValue: 'id' }) column: string,
+    @Args('orderBy', { type: () => String, defaultValue: 'asc' }) orderBy: string,
+  ): Promise<Product[]> {
+    try {
+      console.log('page=====', page)
+      return await this.productsService.findwithPagination({
+        page,
+        limit,
+        column,
+        orderBy,
+      });
+    } catch (error) {
+      console.log('er', error)
+    }
+  }
+
   @Mutation(() => Product)
   @UseGuards(JwtAuthGuard)
   updateProduct(
@@ -53,7 +77,15 @@ export class ProductsResolver {
     @CurrentUser() user: User,
     @Args('id', { type: () => Int }) id: number,
   ) {
-    console.log('thisreme');
     return this.productsService.remove(id, user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Product)
+  removeManyProducts(
+    @CurrentUser() user: User,
+    @Args({ name: 'ids', type: () => [Number] }) ids: Number[],
+  ) {
+    return this.productsService.removeManyProducts(ids, user.userId);
   }
 }

@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 // import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import { AppModule } from './app.module';
@@ -15,6 +16,7 @@ async function bootstrap() {
     // }
   );
   await app.listen(5000);
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   console.log('succeess.');
   if (module.hot) {

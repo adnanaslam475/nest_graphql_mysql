@@ -13,9 +13,35 @@ import {
 @Entity()
 @ObjectType()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   @Field(() => Int, { nullable: true, description: 'id of the user' })
-  userId: number;
+  id: number;
+
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'firstname of the user' })
+  firstname: string;
+
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'lastname of the user' })
+  lastname: string;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'otp of the user' })
+  otp: string;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'phone of the user' })
+  phone: string;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'mac/ip of the user' })
+  mac: string;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'role of the user' })
+  role: string;
 
   @IsEmail()
   @Column({ unique: true, nullable: true })

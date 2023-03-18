@@ -1,5 +1,6 @@
 import { InputType, Int, Field, Float, ArrayElement } from '@nestjs/graphql';
 import graphqlTypeJson from 'graphql-type-json';
+import { CreateDateColumn } from 'typeorm';
 
 @InputType()
 export class CreateProductInput {
@@ -20,4 +21,6 @@ export class CreateProductInput {
     description: 'suerid of product',
   })
   images?: object;
+  @CreateDateColumn()
+  createdAt: Date;
 }

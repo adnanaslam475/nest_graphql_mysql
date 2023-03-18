@@ -20,7 +20,7 @@ export const Userz = createParamDecorator(
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Query(() => [User], { name: 'users' })
   @UseGuards(JwtAuthGuard)

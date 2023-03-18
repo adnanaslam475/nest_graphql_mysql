@@ -1,4 +1,4 @@
-import { ApolloDriver } from '@nestjs/apollo';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -16,18 +16,36 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+// import { VideoModule } from './video/video.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      debug: true,
-      playground: true,
-      context: ({ req }) => {
-        return { req };
-      },
-    }),
+    GraphQLModule.forRoot
+      // <ApolloDriverConfig>
+      ({
+        driver: ApolloDriver,
+        buildSchemaOptions: {
+          dateScalarMode: 'isoDate',
+          numberScalarMode: 'float',
+        },
+        subscriptions: {
+
+          // onConnect: (connectionParams, webSocket) => {
+          //   // handle connection auth
+          // },
+
+          'graphql-ws': true,
+          'subscriptions-transport-ws': {
+            path: '/graphql'
+          }
+        },
+        autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+        debug: true,
+        playground: true,
+        context: ({ req }) => {
+          return { req };
+        },
+      }),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -53,4 +71,4 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   controllers: [AppController],
   providers: [AppService, AuthService, JwtService],
 })
-export class AppModule {}
+export class AppModule { }

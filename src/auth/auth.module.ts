@@ -8,17 +8,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { GqlAuthGuard } from './dto/gql-auth-guard';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersService } from 'src/users/users.service';
+// import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
     ConfigModule,
     forwardRef(() => UsersModule),
-
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '12h' },
+        signOptions: { expiresIn: '7d' },
       }),
       inject: [ConfigService],
     }),
@@ -27,4 +26,4 @@ import { UsersService } from 'src/users/users.service';
   providers: [AuthResolver, AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }

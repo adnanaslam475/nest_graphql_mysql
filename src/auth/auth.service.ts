@@ -20,7 +20,7 @@ export class AuthService {
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findOne(email);
@@ -29,7 +29,7 @@ export class AuthService {
         delete user.password;
         const access_token = this.jwtService.sign({
           username: user.email,
-          sub: user.userId,
+          sub: user.id,
         });
         // console.log('userbh--', user);
         return { ...user, access_token };
@@ -42,7 +42,7 @@ export class AuthService {
     try {
       const payload = {
         email: user.email,
-        sub: user.userId,
+        sub: user.id,
       };
 
       return {

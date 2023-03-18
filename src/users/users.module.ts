@@ -15,7 +15,7 @@ import { CommonModule } from '../common/common.module';
     CommonModule,
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      signOptions: { expiresIn: '12h' },
+      signOptions: { expiresIn: '7d' },
       secret: `${process.env.JWT_SECRET}`,
     }),
   ],
