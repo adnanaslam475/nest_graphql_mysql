@@ -20,6 +20,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
+
     GraphQLModule.forRoot
       // <ApolloDriverConfig>
       ({
@@ -29,10 +30,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
           numberScalarMode: 'float',
         },
         subscriptions: {
-
-          // onConnect: (connectionParams, webSocket) => {
-          //   // handle connection auth
-          // },
 
           'graphql-ws': true,
           'subscriptions-transport-ws': {
@@ -61,7 +58,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
       synchronize: true, // foor tables generation
       // dropSchema: true,
       // entities: ['src/**/*.entity.ts']
-
     }),
     ProductsModule,
     AuthModule,

@@ -35,28 +35,57 @@ scalar DateTime
 
 type User {
   """id of the user"""
-  userId: Int
+  id: Int
+
+  """firstname of the user"""
+  firstname: String
+
+  """lastname of the user"""
+  lastname: String
+
+  """otp of the user"""
+  otp: String
+
+  """phone of the user"""
+  phone: String
+
+  """mac/ip of the user"""
+  mac: String
+
+  """role of the user"""
+  role: String
 
   """email of the user"""
   email: String
 
-  """role of the user"""
+  """password of the user"""
   password: String
 
-  """tokens of the user"""
-  access_token: String
+  """password of the user"""
+  email_verified: Boolean
+
+  """confirm password of the user"""
+  confirm_password: String
 }
 
-type LoginResponse {
-  access_token: String!
-  user: User!
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+}
+
+type PaginatedUsers {
+  nodes: [User!]!
+  currentPage: Float!
+  totalCount: Float!
+  totalPages: Float!
+  pageInfo: PageInfo!
 }
 
 type Query {
   products: [Product!]!
   product(id: Int!): Product!
   getProducts(page: Float!, limit: Int!, column: String! = "id", orderBy: String! = "asc"): [Product!]!
-  users: [User!]!
+  users(page: Float!, start_date: String, end_date: String): PaginatedUsers!
   user(username: String!): User!
 }
 
@@ -65,9 +94,11 @@ type Mutation {
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
   removeManyProducts(ids: [Float!]!): Product!
-  loginUser(loginUserInput: LoginUserInput!): LoginResponse!
+  loginUser(loginUserInput: LoginUserInput!): User!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  otpVerify(otpInput: otpUserInput!): User!
+  setPassword(passwordInput: PasswordInput!): User!
 }
 
 input CreateProductInput {
@@ -113,20 +144,88 @@ input LoginUserInput {
 }
 
 input CreateUserInput {
-  """password of the user"""
-  password: String!
-
   """email of the user"""
   email: String!
+
+  """firstname of the user"""
+  firstname: String!
+
+  """lastname of the user"""
+  lastname: String!
+
+  """mac/ip of the user"""
+  mac: String!
+
+  """phone of the user"""
+  phone: String!
+
+  """role of the user"""
+  role: String!
 }
 
 input UpdateUserInput {
-  """password of the user"""
-  password: String
-
   """email of the user"""
   email: String
+
+  """firstname of the user"""
+  firstname: String
+
+  """lastname of the user"""
+  lastname: String
+
+  """mac/ip of the user"""
+  mac: String
+
+  """phone of the user"""
+  phone: String
+
+  """role of the user"""
+  role: String
   userId: Int!
+  password: String!
+  confirm_password: String!
+}
+
+input otpUserInput {
+  email: String!
+
+  """firstname of the user"""
+  firstname: String
+
+  """lastname of the user"""
+  lastname: String
+
+  """mac/ip of the user"""
+  mac: String
+
+  """phone of the user"""
+  phone: String
+
+  """role of the user"""
+  role: String
+  otp: String!
+}
+
+input PasswordInput {
+  """email of the user"""
+  email: String
+
+  """firstname of the user"""
+  firstname: String
+
+  """lastname of the user"""
+  lastname: String
+
+  """mac/ip of the user"""
+  mac: String
+
+  """phone of the user"""
+  phone: String
+
+  """role of the user"""
+  role: String
+  newpassword: String!
+  confirmpassword: String!
 }
 
 type Subscription {

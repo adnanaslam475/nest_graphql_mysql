@@ -18,7 +18,7 @@ async function bootstrap() {
   await app.listen(5000);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  console.log('succeess.');
+  console.log('succeess.?');
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

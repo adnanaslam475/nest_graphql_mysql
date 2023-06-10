@@ -4,7 +4,7 @@ import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { JwtAuthGuard } from 'src/auth/jwt-auth-guard';
-import { Body, ParseIntPipe, ParseArrayPipe, ParseBoolPipe, ParseEnumPipe, ParseFilePipe, Request, UseGuards, ValidationPipe, UseInterceptors } from '@nestjs/common';
+import { Body, ParseIntPipe, UseGuards, ValidationPipe, UseInterceptors } from '@nestjs/common';
 import { CurrentUser } from 'src/users/user.decorator.graphql';
 import { User } from 'src/users/entities/user.entity';
 import { LoggingInterceptor } from 'src/users/users.interceptors';
@@ -34,7 +34,7 @@ export class ProductsResolver {
   ) {
     return this.productsService.create({
       ...createProductInput,
-      userId: user.userId,
+      userId: user.id,
     });
   }
 
@@ -67,7 +67,7 @@ export class ProductsResolver {
   ) {
     return this.productsService.update(id, {
       ...updateProductInput,
-      userId: user.userId,
+      userId: user.id,
     });
   }
 
@@ -77,7 +77,7 @@ export class ProductsResolver {
     @CurrentUser() user: User,
     @Args('id', { type: () => Int }) id: number,
   ) {
-    return this.productsService.remove(id, user.userId);
+    return this.productsService.remove(id, user.id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -86,6 +86,6 @@ export class ProductsResolver {
     @CurrentUser() user: User,
     @Args({ name: 'ids', type: () => [Number] }) ids: Number[],
   ) {
-    return this.productsService.removeManyProducts(ids, user.userId);
+    return this.productsService.removeManyProducts(ids, user.id);
   }
 }

@@ -1,13 +1,15 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 import { IsEmail } from 'class-validator';
 
 import {
-  BeforeInsert,
+  // BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   Generated,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -35,7 +37,7 @@ export class User {
   @Field(() => String, { nullable: true, description: 'phone of the user' })
   phone: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true, nullable: true })
   @Field(() => String, { nullable: true, description: 'mac/ip of the user' })
   mac: string;
 
@@ -49,21 +51,22 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
-  @Field(() => String, { nullable: true, description: 'role of the user' })
+  @Field(() => String, { nullable: true, description: 'password of the user' })
   password: string;
 
-  @Column({
-    default: '',
-    nullable: true,
-  })
-  @Field(() => String, { nullable: true, description: 'tokens of the user' })
-  access_token?: string;
 
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(
-      this.password,
-      Number(process.env.HASH_SALT),
-    );
-  }
+  @Column({ nullable: true, default: false })
+  @Field(() => Boolean, { nullable: true, description: 'password of the user' })
+  email_verified?: boolean;
+
+  @Column({ nullable: true })
+  @Field(() => String, { nullable: true, description: 'confirm password of the user' })
+  confirm_password?: string;
+
+
+  @CreateDateColumn({ name: 'created_at', })
+  createdAt?: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt?: Date;
 }
